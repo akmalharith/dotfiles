@@ -7,6 +7,7 @@ tap "homebrew/core"
 tap "homebrew/services"
 
 brew "zsh"
+brew "unzip"
 brew "aliyun-cli"
 brew "apr-util"
 brew "augeas"
