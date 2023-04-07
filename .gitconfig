@@ -1,0 +1,7 @@
+[user]
+    name = akmalharith
+
+[credential]
+    # CodeCommit
+    helper = !aws codecommit credential-helper $@
+    UseHttpPath = true

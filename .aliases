@@ -1,0 +1,60 @@
+# Alias definitions
+
+alias python="python3"
+alias pip="pip3"
+alias t="terraform"
+alias k="kubectl"
+alias keyp="ssh-keygen -t ed25519 -C '$USER@$HOSTNAME'"
+# Copy public key
+alias keypcopy="cat ~/.ssh/id_ed25519.pub | pbcopy"
+
+# IP addresses
+# alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
+alias ip="curl checkip.amazonaws.com"
+alias localip="hostname -I | map"
+alias ips="ifconfig -a | grep -o 'inet6\? \(addr:\)\?\s\?\(\(\([0-9]\+\.\)\{3\}[0-9]\+\)\|[a-fA-F0-9:]\+\)' | awk '{ sub(/inet6? (addr:)? ?/, \"\"); print }'"
+
+# Show active network interfaces
+# alias ifactive="ifconfig | pcregrep -M -o '^[^\t:]+:([^\n]|\n\t)*status: active'"
+# Has to brew pcre https://formulae.brew.sh/formula/pcre
+
+# Only for linux, pbcopy using xclip
+if [[ "$OSTYPE" == "linux-gnu"* ]];
+then
+    alias pbcopy='xclip -selection clipboard'
+
+    # Clean Zone.Identifier files that are created when pasting files 
+    # into WSL2 from Windows
+    # https://github.com/microsoft/WSL/issues/7456
+    alias clean="find . -name '*:Zone.Identifier' -type f -delete"
+fi
+
+# Intuitive map function
+# For example, to list all directories that contain a certain file:
+# find . -name .gitattributes | map dirname
+alias map="xargs -n1"
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+# alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
+    alias ls='ls --color=auto'
+    #alias dir='dir --color=auto'
+    #alias vdir='vdir --color=auto'
+
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+fi
+
+
+# colored GCC warnings and errors
+#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+
+# some more ls aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
