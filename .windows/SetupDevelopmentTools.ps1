@@ -1,6 +1,8 @@
 #Requires -RunAsAdministrator
 # Run this for the first time you load Windows to make sure WSL2 can be safely setup
 
+$UBUNTU_VERSION = "22.04"
+
 # Install custom fonts
 echo "Install fonts"
 $fonts = (New-Object -ComObject Shell.Application).Namespace(0x14)
@@ -54,3 +56,6 @@ rm C:\Temp\wsl_update_x64.msi
 
 # Set default version
 wsl --set-default-version 2
+
+# Install WSL2
+wsl --install -d "Ubuntu-"$UBUNTU_VERSION
