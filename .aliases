@@ -4,6 +4,7 @@ alias python="python3"
 alias pip="pip3"
 alias t="terraform"
 alias k="kubectl"
+alias m="minikube"
 alias keyp="ssh-keygen -t ed25519 -C '$USER@$HOSTNAME'"
 # Copy public key
 alias keypcopy="cat ~/.ssh/id_ed25519.pub | pbcopy"
