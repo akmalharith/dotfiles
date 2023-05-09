@@ -77,7 +77,7 @@ do_it () {
     
     # TODO: Install oh-my-zsh
     # sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-    # Copy oh-my-zsh updated theme
+    # Overwrite oh-my-zsh themes
     
 
     # TODO: Switch to different shells here
