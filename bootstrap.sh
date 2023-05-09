@@ -74,6 +74,11 @@ do_it () {
         test -f "$HOME/.zsh_profile" && mv "$HOME/.zsh_profile" "$HOME/.zsh_profile.bak"
         test -f "$HOME/.aliases" && mv "$HOME/.aliases" "$HOME/.aliases.bak"
     fi
+    
+    # TODO: Install oh-my-zsh
+    # sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+    # Copy oh-my-zsh updated theme
+    
 
     # TODO: Switch to different shells here
     # echo $SHELL
