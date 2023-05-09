@@ -147,3 +147,12 @@ which minikube > /dev/null
 if [[ $? != 0 ]]; then
     minikube completion bash > ~/.minikube-completion  # for bash users
 fi
+
+# Custom paths
+NPM_PACKAGES="$HOME/.npm-packages"
+export PATH="$PATH:$NPM_PACKAGES/bin"
+export PATH="$PATH:$HOME/.local/bin"
+
+# Preserve MANPATH if you already defined it somewhere in your config.
+# Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
+export MANPATH="$MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
