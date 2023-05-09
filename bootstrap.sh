@@ -75,6 +75,8 @@ do_it () {
         test -f "$HOME/.aliases" && mv "$HOME/.aliases" "$HOME/.aliases.bak"
     fi
 
+    # TODO: Switch to different shells here
+    # echo $SHELL
     # Copy dotfiles to home directory
     cp \
     .aliases \
@@ -84,6 +86,15 @@ do_it () {
     .gitconfig \
     .hushlogin \
     $HOME/
+    
+    # Copy folders
+    TF_CREDS=.terraform.d/credentials.tfrc.json
+    if [ -f "$HOME/$TF_CREDS" ]; then
+        echo "Current $TF_CREDS exists."
+    else 
+        echo "$TF_CREDS does not exist. Copying placeholder credentials."
+        cp $TF_CREDS $HOME/$TF_CREDS
+    fi
 
     source ~/.bash_profile;
     set +x
