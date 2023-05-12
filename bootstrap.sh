@@ -3,14 +3,17 @@ do_it () {
     set -x 
 
     # Set passwordless sudo
-    if sudo grep -xqFe "$USER ALL=(ALL) NOPASSWD:ALL" /etc/sudoers
+    # May not be possible for remote DE eg: gitpod
+
+    if [[ "$USER" != "gitpod" ]];
     then
+        if sudo grep -xqFe "$USER ALL=(ALL) NOPASSWD:ALL" /etc/sudoers
+        then
         echo "Found NOPASSWD entry. Skipping."
-
-    else
+        else
         echo "NOPASSWD entry not found. Adding a new entry."
-        echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo EDITOR='tee -a' visudo
-
+        echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo EDITOR='tee -a' visud
+        fi
     fi
 
     # Setup homebrew
@@ -32,17 +35,13 @@ do_it () {
                 test -d /home/linuxbrew/.linuxbrew && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
                 test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
                 echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
-            
             fi
                         
         else
-
             echo "Unsupported OSTYPE $OSTYPE" 1>&2
             exit 125
-
         fi
     else
-
         echo "Found homebrew. Trying to update."
         brew update
     fi
@@ -59,10 +58,8 @@ do_it () {
         exit 125
 
     else
-        
         echo "Installing pip packages here."
         pip3 install -r packages.txt
-
     fi 
 
 
@@ -101,7 +98,7 @@ do_it () {
         cp $TF_CREDS $HOME/$TF_CREDS
     fi
 
-    source ~/.bash_profile;
+    source ~/.bashrc;
     set +x
 }
 
