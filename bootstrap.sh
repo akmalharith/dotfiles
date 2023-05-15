@@ -12,7 +12,7 @@ do_it () {
         echo "Found NOPASSWD entry. Skipping."
         else
         echo "NOPASSWD entry not found. Adding a new entry."
-        echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo EDITOR='tee -a' visud
+        echo "$USER ALL=(ALL) NOPASSWD:ALL" | sudo EDITOR='tee -a' visudo
         fi
     fi
 
