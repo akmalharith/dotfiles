@@ -9,6 +9,7 @@ tap "derailed/k9s"
 tap "weaveworks/tap"
 
 brew "weaveworks/tap/eksctl"
+brew "amazon-ecs-cli"
 brew "zsh"
 brew "unzip"
 brew "unbound"
