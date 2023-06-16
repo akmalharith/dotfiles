@@ -1,10 +1,11 @@
 #!/bin/bash
+# Only run this in your default shell
+# If you want to use zsh, change your default shell to zsh
+
 do_it () {
     set -x 
-
     # Set passwordless sudo
     # May not be possible for remote DE eg: gitpod
-
     if [[ "$USER" != "gitpod" ]];
     then
         if sudo grep -xqFe "$USER ALL=(ALL) NOPASSWD:ALL" /etc/sudoers
@@ -63,28 +64,30 @@ do_it () {
     fi 
 
 
-    if [ -f "$HOME/.bash_profile" ]; then
-        echo ".bash_profile found."
-        # Disable other shell profiles
-        test -f "$HOME/.bashrc" && mv "$HOME/.bashrc" "$HOME/.bashrc.bak"
-        test -f "$HOME/.bash_profile" && mv "$HOME/.bash_profile" "$HOME/.bash_profile.bak"
-        test -f "$HOME/.zsh_profile" && mv "$HOME/.zsh_profile" "$HOME/.zsh_profile.bak"
-        test -f "$HOME/.aliases" && mv "$HOME/.aliases" "$HOME/.aliases.bak"
-    fi
-    
-    # TODO: Install oh-my-zsh
-    # sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
-    # Overwrite oh-my-zsh themes
-    
+    if [ -f "$HOME/.profile" ]; then
+        echo ".profile found."
 
-    # TODO: Switch to different shells here
-    # echo $SHELL
+        # Disable other shell profiles 
+        # by performing a backup of them in ~/.profile_bak/bak/
+
+        profile_files=("bashrc" "bash_profile" "zshrc" "zsh_profile" "aliases")
+
+        mkdir -p ~/.profile_bak/bak/
+
+        for i in "${profile_files[@]}"
+        do
+            test -f "$HOME/.$i" && mv "$HOME/.$i" "$HOME/.$i.bak"
+            echo "$i"
+        done
+    fi
+
     # Copy dotfiles to home directory
     cp \
     .aliases \
-    .bashrc \
-    .bash_profile \
+    .tools \
     .curlrc \
+    .userrc \
+    .profile \
     .gitconfig \
     .hushlogin \
     $HOME/
@@ -97,8 +100,21 @@ do_it () {
         echo "$TF_CREDS does not exist. Copying placeholder credentials."
         cp $TF_CREDS $HOME/$TF_CREDS
     fi
+    
+    # Universal source profile
+    if [ $SHELL == "/bin/bash" ]; then 
+        mv ~/.userrc ~/.bashrc
+        
+        source ~/.bashrc
+    elif [ $SHELL == "/bin/zsh" ]; then
+        mv ~/.userrc ~/.zshrc
 
-    source ~/.bashrc;
+        # Copy oh-my-zsh agnoster theme
+        mkdir -p ~/.oh-my-zsh/themes
+        cp dotfiles/.oh-my-zsh/themes/agnoster.zsh-theme ~/.oh-my-zsh/themes/agnoster.zsh-theme
+
+        source ~/.zshrc
+    fi 
     set +x
 }
 
@@ -107,5 +123,4 @@ echo "";
 
 if [ "${REPLY,,}" == "y" ]; then
     do_it;
-
 fi;

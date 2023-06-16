@@ -12,22 +12,6 @@ if [ -f ~/.aliases ]; then
     source ~/.aliases
 fi
 
-# # if running bash
-# if [ -n "$BASH_VERSION" ]; then
-#     # include .bashrc if it exists
-#     if [ -f "$HOME/.bashrc" ]; then
-#         . "$HOME/.bashrc"
-#     fi
-# fi
-# 
-# # if running zsh
-# if [ -n "$ZSH_VERSION" ]; then
-#     # include .zshrc if it exists
-#     if [ -f "$HOME/.zshrc" ]; then
-#         . "$HOME/.zshrc"
-#     fi
-# fi
-
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
@@ -127,25 +111,9 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# Autocompletion
-which aws_completer > /dev/null
-if [[ $? != 0 ]]; then
-    complete -C '$(which aws_completer)' aws
-fi
-
-which terraform > /dev/null
-if [[ $? != 0 ]]; then
-    complete -C '$(which terraform)' terraform
-fi
-
-which kubectl > /dev/null
-if [[ $? != 0 ]]; then
-    kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
-fi
-
-which minikube > /dev/null
-if [[ $? != 0 ]]; then
-    minikube completion bash > ~/.minikube-completion  # for bash users
+# Autocompletion, tools
+if [ -f ~/.tools ]; then
+    source ~/.tools
 fi
 
 # Custom paths
@@ -156,3 +124,6 @@ export PATH="$PATH:$HOME/.local/bin"
 # Preserve MANPATH if you already defined it somewhere in your config.
 # Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
 export MANPATH="$MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
+
+# Corporate proxy 
+proxy auto

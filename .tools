@@ -1,0 +1,83 @@
+#!/bin/bash 
+# Tools aliases, configs, autocompleter based on the default shell
+
+alias python="python3"
+alias pip="pip3"
+alias t="terraform"
+alias k="kubectl"
+alias m="minikube"
+alias e="eksctl"
+
+# AWS CLI
+if [ $SHELL == "/bin/bash" ]; then 
+    # aws cli
+    which aws_completer > /dev/null
+    if [[ $? != 0 ]]; then
+        complete -C '$(which aws_completer)' aws
+    fi
+
+    # terraform
+    which terraform > /dev/null
+    if [[ $? != 0 ]]; then
+        complete -C '$(which terraform)' terraform
+    fi
+
+    # kubectl
+    which kubectl > /dev/null
+    if [[ $? != 0 ]]; then
+        kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
+    fi
+
+    # eksctl
+    which eksctl > /dev/null
+    if [[ $? != 0 ]]; then
+        . <(eksctl completion bash)
+    fi
+
+    # minikube
+    which minikube > /dev/null
+    if [[ $? != 0 ]]; then
+        minikube completion bash > ~/.minikube-completion  # for bash users
+    fi
+    
+elif [ $SHELL == "/bin/zsh" ]; then
+    # aws cli
+    which aws_completer > /dev/null
+    if [[ $? != 0 ]]; then
+        autoload bashcompinit && bashcompinit
+        autoload -Uz compinit && compinit
+        complete -C '/usr/local/bin/aws_completer' aws
+    fi
+
+    # terraform
+    which terraform > /dev/null
+    if [[ $? != 0 ]]; then
+        autoload -U +X bashcompinit && bashcompinit
+        complete -o nospace -C /usr/local/bin/terraform terraform
+    fi
+
+    # kubectl 
+    which kubectl > /dev/null
+    if [[ $? != 0 ]]; then
+        kubectl completion zsh  # set up autocomplete in zsh into the current shell
+        [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
+        complete -o default -F __start_kubectl k
+    fi
+
+    # eksctl
+    which eksctl > /dev/null
+    if [[ $? != 0 ]]; then
+        mkdir -p ~/.zsh/completion/
+        eksctl completion zsh > ~/.zsh/completion/_eksctl
+        fpath=($fpath ~/.zsh/completion)
+        autoload -U compinit
+        compinit
+    fi
+
+    # minikube
+    which minikube > /dev/null
+    if [[ $? != 0 ]]; then
+        minikube completion zsh > ~/.minikube-completion  # for zsh users
+    fi
+fi
+
