@@ -83,10 +83,11 @@ do_it () {
 
     # Copy dotfiles to home directory
     cp \
+    .zshrc \
+    .bashrc \
     .aliases \
     .tools \
     .curlrc \
-    .userrc \
     .profile \
     .gitconfig \
     .hushlogin \
@@ -103,15 +104,15 @@ do_it () {
     
     # Universal source profile
     if [ $SHELL == "/bin/bash" ]; then 
-        mv ~/.userrc ~/.bashrc
+        # cp ~/.bashrc ~/.bashrc
         
         source ~/.bashrc
+        
     elif [ $SHELL == "/bin/zsh" ]; then
-        mv ~/.userrc ~/.zshrc
-
+        
         # Copy oh-my-zsh agnoster theme
-        mkdir -p ~/.oh-my-zsh/themes
-        cp dotfiles/.oh-my-zsh/themes/agnoster.zsh-theme ~/.oh-my-zsh/themes/agnoster.zsh-theme
+        # mkdir -p ~/.oh-my-zsh/themes
+        # cp dotfiles/.oh-my-zsh/themes/agnoster.zsh-theme ~/.oh-my-zsh/themes/agnoster.zsh-theme
 
         source ~/.zshrc
     fi 
