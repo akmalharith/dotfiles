@@ -8,76 +8,101 @@ alias k="kubectl"
 alias m="minikube"
 alias e="eksctl"
 
+if [[ "$OSTYPE" == "linux-gnu"* ]]
+then
+    BASH="/usr/bin/bash"
+    ZSH="/usr/bin/zsh"
+elif [[ "$OSTYPE" == "darwin"* ]]
+then
+    BASH="/bin/bash"
+    ZSH="/bin/zsh"
+fi
+
 # AWS CLI
-if [ $SHELL == "/bin/bash" ]; then 
+if [[ $SHELL == $BASH ]]
+then 
     # aws cli
-    which aws_completer > /dev/null
-    if [[ $? != 0 ]]; then
+    if aws_completer &>/dev/null
+    then
         complete -C '$(which aws_completer)' aws
     fi
 
     # terraform
-    which terraform > /dev/null
-    if [[ $? != 0 ]]; then
+    if terraform &> /dev/null
+    then
         complete -C '$(which terraform)' terraform
     fi
 
     # kubectl
-    which kubectl > /dev/null
-    if [[ $? != 0 ]]; then
+    if kubectl &> /dev/null
+    then
         kubectl completion bash | sudo tee /etc/bash_completion.d/kubectl > /dev/null
     fi
 
     # eksctl
-    which eksctl > /dev/null
-    if [[ $? != 0 ]]; then
+    if eksctl &> /dev/null
+    then
         . <(eksctl completion bash)
     fi
 
     # minikube
-    which minikube > /dev/null
-    if [[ $? != 0 ]]; then
-        minikube completion bash > ~/.minikube-completion  # for bash users
+    if minikube &> /dev/null
+    then
+        minikube completion bash > ~/.minikube-completion 
     fi
-    
-elif [ $SHELL == "/bin/zsh" ]; then
+
+elif [[ $SHELL == $ZSH ]]
+then
+
+    if type brew &>/dev/null
+    then
+        FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}" 
+        autoload -Uz compinit
+        compinit
+    fi
+
     # aws cli
-    which aws_completer > /dev/null
-    if [[ $? != 0 ]]; then
+    if aws_completer &>/dev/null
+    then
         autoload bashcompinit && bashcompinit
         autoload -Uz compinit && compinit
-        complete -C '/usr/local/bin/aws_completer' aws
+        complete -C $(which aws_completer) aws
     fi
 
     # terraform
-    which terraform > /dev/null
-    if [[ $? != 0 ]]; then
+    if terraform &> /dev/null
+    then
         autoload -U +X bashcompinit && bashcompinit
-        complete -o nospace -C /usr/local/bin/terraform terraform
+        complete -o nospace -C /home/linuxbrew/.linuxbrew/bin/terraform terraform
     fi
 
-    # kubectl 
-    which kubectl > /dev/null
-    if [[ $? != 0 ]]; then
-        kubectl completion zsh  # set up autocomplete in zsh into the current shell
-        [[ $commands[kubectl] ]] && source <(kubectl completion zsh)
+    # kubectl
+    if kubectl &> /dev/null
+    then
+        source <(kubectl completion zsh)
         complete -o default -F __start_kubectl k
     fi
 
     # eksctl
-    which eksctl > /dev/null
-    if [[ $? != 0 ]]; then
+    if eksctl &> /dev/null
+    then
         mkdir -p ~/.zsh/completion/
         eksctl completion zsh > ~/.zsh/completion/_eksctl
         fpath=($fpath ~/.zsh/completion)
         autoload -U compinit
-        compinit
     fi
 
     # minikube
-    which minikube > /dev/null
-    if [[ $? != 0 ]]; then
+    if minikube &> /dev/null
+    then
         minikube completion zsh > ~/.minikube-completion  # for zsh users
     fi
-fi
 
+    # helm 
+    if helm &> /dev/null
+    then
+        helm completion zsh > ~/.zsh/completion/_helm
+        fpath=($fpath ~/.zsh/completion)
+        autoload -U compinit
+    fi
+fi

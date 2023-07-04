@@ -72,5 +72,9 @@ export PATH="$PATH:$HOME/.local/bin"
 # Otherwise, fall back to `manpath` so we can inherit from `/etc/manpath`.
 export MANPATH="$MANPATH-$(manpath)}:$NPM_PACKAGES/share/man"
 
-# Corporate proxy 
-proxy auto
+# Corporate proxy ?
+
+if [[ "$OSTYPE" == "linux-gnu"* ]];
+then
+    export BROWSER="/mnt/c/Program Files/Google/Chrome/Application/chrome.exe"
+fi

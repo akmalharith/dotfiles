@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/bin/zsh
 # Only run this in your default shell
 # If you want to use zsh, change your default shell to zsh
 
 do_it () {
-    set -x 
+    set -x
     # Set passwordless sudo
     # May not be possible for remote DE eg: gitpod
     if [[ "$USER" != "gitpod" ]];
@@ -21,7 +21,7 @@ do_it () {
     which brew
     if [[ $? != 0 ]];
     then
-        if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" == "darwin"* ]]; 
+        if [[ "$OSTYPE" == "linux-gnu"* ]] || [[ "$OSTYPE" == "darwin"* ]];
         then
 
             echo "Installing homebrew"
@@ -29,7 +29,8 @@ do_it () {
 
             if [[ "$OSTYPE" == "linux-gnu"* ]];
             then
-                sudo apt-get update -y 
+                BREW_PATH="home/linuxbrew/.linuxbrew/bin/brew"
+                sudo apt-get update -y
                 sudo apt-get install build-essential -y
 
                 test -d ~/.linuxbrew && eval "$(~/.linuxbrew/bin/brew shellenv)"
@@ -37,7 +38,7 @@ do_it () {
                 test -r ~/.bash_profile && echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.bash_profile
                 echo "eval \"\$($(brew --prefix)/bin/brew shellenv)\"" >> ~/.profile
             fi
-                        
+
         else
             echo "Unsupported OSTYPE $OSTYPE" 1>&2
             exit 125
@@ -51,9 +52,8 @@ do_it () {
     brew bundle --file="Brewfile"
 
     which pip3
-    if [[ $? != 0 ]]; 
+    if [[ $? != 0 ]];
     then
-        
         echo "pip3 not found" 1>&2
         # TODO: Setup pip here?
         exit 125
@@ -61,7 +61,7 @@ do_it () {
     else
         echo "Installing pip packages here."
         pip3 install -r packages.txt
-    fi 
+    fi
 
 
     if [ -f "$HOME/.profile" ]; then
@@ -69,7 +69,6 @@ do_it () {
 
         # Disable other shell profiles 
         # by performing a backup of them in ~/.profile_bak/bak/
-
         profile_files=("bashrc" "bash_profile" "zshrc" "zsh_profile" "aliases")
 
         mkdir -p ~/.profile_bak/bak/
@@ -92,36 +91,32 @@ do_it () {
     .gitconfig \
     .hushlogin \
     $HOME/
-    
+
     # Copy folders
-    TF_CREDS=.terraform.d/credentials.tfrc.json
-    if [ -f "$HOME/$TF_CREDS" ]; then
-        echo "Current $TF_CREDS exists."
-    else 
-        echo "$TF_CREDS does not exist. Copying placeholder credentials."
-        cp $TF_CREDS $HOME/$TF_CREDS
-    fi
-    
+    # TF_CREDS=.terraform.d/credentials.tfrc.json
+    # if [ -f "$HOME/$TF_CREDS" ]; then
+    #     echo "Current $TF_CREDS exists."
+    # else
+    #    echo "$TF_CREDS does not exist. Copying placeholder credentials."
+    #     cp $TF_CREDS $HOME/$TF_CREDS
+    # fi
+
     # Universal source profile
-    if [ $SHELL == "/bin/bash" ]; then 
-        # cp ~/.bashrc ~/.bashrc
-        
+    if [[ "$SHELL" == "/usr/bin/bash" ]]; then
         source ~/.bashrc
-        
-    elif [ $SHELL == "/bin/zsh" ]; then
-        
-        # Copy oh-my-zsh agnoster theme
-        # mkdir -p ~/.oh-my-zsh/themes
-        # cp dotfiles/.oh-my-zsh/themes/agnoster.zsh-theme ~/.oh-my-zsh/themes/agnoster.zsh-theme
+
+    elif [[ "$SHELL" == "/usr/bin/zsh" ]]; then
 
         source ~/.zshrc
-    fi 
+    fi
+
     set +x
 }
 
-read -p "This may overwrite existing files in your home directory. Are you sure? [y/N] " -n 1;
+echo "This may overwrite existing files in your home directory. Are you sure? [y/N]";
+read -n 1 REPLY;
 echo "";
 
-if [ "${REPLY,,}" == "y" ]; then
+if [ "$REPLY" = "y" ]; then
     do_it;
 fi;
